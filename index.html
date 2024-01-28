@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Head Section: Meta tags, Font Awesome, Favicon, Style Sheets, and Title -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/fbbe5497d7.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="icon" href="./images/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mediaQueries.css" />
+    <title>To-Do List</title>
+  </head>
+  <body>
+    <!-- Header Section -->
+    <div class="header">
+      <!-- Title of the To-Do List -->
+      <h2>To-Do List</h2>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+      <!-- To-Do List Grid -->
+      <div class="todo-grid">
+        <!-- Input Container for Adding Tasks -->
+        <div class="grid-container input-container">
+          <!-- Input Field for Adding Tasks -->
+          <input type="text" placeholder="Enter your task" />
+        </div>
+
+        <!-- Completed Tasks Section -->
+        <div class="grid-container compeleted-list list-container">
+          <!-- Heading for Completed Tasks -->
+          <div>
+            <h3>Completed Task</h3>
+          </div>
+          <!-- Container for Completed Tasks with Placeholder Message -->
+          <div class="ul-container comp">
+            <ul id="comp-list"><p id="msg">No tasks to show</p></ul>
+          </div>
+        </div>
+
+        <!-- To-Do Tasks Section -->
+        <div class="grid-container todo-list list-container">
+          <!-- Heading for To-Do Tasks -->
+          <div>
+            <h3>To-Do</h3>
+          </div>
+          <!-- Container for To-Do Tasks with Placeholder Message -->
+          <div class="ul-container">
+            <ul id="todo-list"><p id="msg">No tasks to show</p></ul>
+          </div>
+          <div class="pdf-button">
+            <button id="download-pdf">Download PDF</button>
+          </div>
+        </div>
+
+        <!-- Reminder Tasks Section -->
+        <div class="grid-container reminder-list list-container">
+          <!-- Heading for Reminder Tasks -->
+          <div>
+            <h3>Reminder Task</h3>
+          </div>
+          <!-- Container for Reminder Tasks with Placeholder Message -->
+          <div class="ul-container">
+            <ul id="rem-list"><p id="msg">No tasks to remind</p></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <!-- Acknowledgement and Copyright Information -->
+      <h4>Made with &#10084;</h4>
+      <p>© Copyright by Rohan</p>
+    </div>
+
+    <!-- JavaScript Script for Functionality -->
+    <script src="script.js"></script>
+
+    <!-- Library for html to pdf generation -->
+    <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+  </body>
+</html>

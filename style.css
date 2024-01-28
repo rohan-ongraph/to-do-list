@@ -1,0 +1,239 @@
+/* Google fonts: Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
+
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  transition: all 0.5s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Body Styles */
+body {
+  height: 100vh;
+  width: 100vw;
+  background: #eee;
+}
+
+/* Header Section ------------------------------- */
+.header {
+  height: 2rem;
+  background-color: rgb(44, 44, 44);
+  color: white;
+  text-align: center;
+  font-weight: 300;
+  font-size: small;
+}
+
+/* Main Container Styles */
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Grid Layout Section */
+.todo-grid {
+  height: 80%;
+  width: 85%;
+  padding: 1rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+/* Grid Container Styles */
+.grid-container {
+  border-radius: 1rem;
+  border: 2px solid rgb(201, 201, 201);
+  background-color: white;
+  overflow: auto;
+}
+
+/* Hover Animation for Grid Containers */
+.grid-container:hover {
+  box-shadow: 5px 5px 10px rgba(76, 75, 75, 0.4);
+}
+
+/* Message Styles */
+#msg {
+  color: #999;
+}
+
+/* Input Container Styles */
+.input-container {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+}
+
+/* Input Element Styles */
+.input-container input {
+  height: 4rem;
+  width: 90%;
+  font-size: medium;
+  font-weight: 300;
+  text-align: center;
+  border-radius: 1rem;
+  padding-left: 0.5rem;
+  position: absolute;
+  outline: none;
+  border: none;
+}
+
+/* List Container Styles */
+.list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  max-height: 100%;
+}
+
+/* Completed List Section */
+.compeleted-list {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 4;
+}
+
+/* To-Do List Section */
+.todo-list {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 6;
+}
+
+/* Reminder List Section */
+.reminder-list {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 4;
+  grid-row-end: 6;
+}
+
+/* List Item Styles */
+.list-div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem; /* Adjust padding as needed */
+}
+
+/* Icon Container Styles */
+.list-child-div {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Icon Styles */
+.list-child-div i {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+/* Common Styling for Lists */
+#todo-list,
+#comp-list,
+#rem-list {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/* UL Container Styles */
+.ul-container {
+  display: flex;
+  align-items: flex-start;
+  text-align: center;
+  height: 80%;
+  width: 100%;
+  justify-content: space-around;
+  word-wrap: break-word;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #999 #eee;
+  overflow-x: auto;
+}
+
+/* List Item Styles inside UL Container */
+.ul-container li {
+  list-style: none;
+  word-wrap: break-word;
+  max-width: 100%;
+  padding: 0.5rem 0 0.5rem 2em;
+  position: relative;
+}
+
+/* List Marker Styles */
+.ul-container li:before {
+  content: "\2022";
+  font-size: large;
+  font-weight: 700;
+  color: #000000; /* Set color as needed */
+  position: absolute;
+  left: 0;
+}
+
+/* Scrollbar Styles */
+.ul-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  scroll-behavior: smooth;
+}
+
+/* Thumb Styles for Vertical Scrollbar */
+.ul-container::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+}
+
+/* Track Styles for Vertical Scrollbar */
+.ul-container::-webkit-scrollbar-track {
+  background-color: #eee;
+  border-radius: 4px;
+}
+
+/* Thumb and Track Styles for Horizontal Scrollbar */
+.ul-container::-webkit-scrollbar-thumb:horizontal {
+  background-color: #999;
+}
+
+.ul-container::-webkit-scrollbar-track:horizontal {
+  background-color: #ddd;
+}
+
+/* Styling for the pdf button and animation when we hover over it */
+#download-pdf{
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 0.5px solid black;
+  padding: .4rem;
+  border-radius: 1rem;
+}
+
+#download-pdf:hover{
+  background-color: black;
+  color: white;
+}
+
+/* Footer Section ---------------------------------------- */
+.footer {
+  text-align: center;
+  background-color: rgb(44, 44, 44);
+  color: white;
+  font-weight: 300;
+  font-size: small;
+}
