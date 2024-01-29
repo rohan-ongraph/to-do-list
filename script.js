@@ -35,47 +35,46 @@ function togglePDFButton() {
 
 // Function to add a new task to the list
 function addTask() {
+  // Check if the input value is empty or contains only whitespace
+  if (input.value === "" || input.value.trim() === "") {
+    alert("You must write something");
+  }
   // Check if the input is not a number
-  if (isNaN(input.value)) {
-    // Check if the input value is empty or contains only whitespace
-    if (input.value === "" || input.value.trim() === "") {
-      alert("You must write something");
-    } else {
-      // Create a new div to hold the task details
-      let newDiv = document.createElement("div");
-      newDiv.classList.add("list-div");
+  else if (isNaN(input.value)) {
+    // Create a new div to hold the task details
+    let newDiv = document.createElement("div");
+    newDiv.classList.add("list-div");
 
-      // Create a new list element and append it to the div
-      let li = document.createElement("li");
-      li.innerHTML = input.value;
-      newDiv.append(li);
+    // Create a new list element and append it to the div
+    let li = document.createElement("li");
+    li.innerHTML = input.value;
+    newDiv.append(li);
 
-      // Create a child div to hold icons for various actions
-      let childDiv = document.createElement("div");
-      childDiv.classList.add("list-child-div");
+    // Create a child div to hold icons for various actions
+    let childDiv = document.createElement("div");
+    childDiv.classList.add("list-child-div");
 
-      // Iterate over icon classes and create corresponding icons
-      for (let i = 0; i < arr.length; i++) {
-        let icon = document.createElement("i");
-        icon.classList.add("fa-solid", arr[i]);
-        childDiv.append(icon);
+    // Iterate over icon classes and create corresponding icons
+    for (let i = 0; i < arr.length; i++) {
+      let icon = document.createElement("i");
+      icon.classList.add("fa-solid", arr[i]);
+      childDiv.append(icon);
 
-        // Add event listeners for edit, delete, and reminder actions
-        if (arr[i] === "fa-pen") {
-          icon.addEventListener("click", () => editTask(newDiv));
-        } else if (arr[i] === "fa-trash") {
-          icon.addEventListener("click", () => delTask(newDiv));
-        } else if (arr[i] === "fa-bell") {
-          icon.addEventListener("click", () => setReminder(newDiv));
-        } else {
-          icon.addEventListener("click", () => checked(newDiv));
-        }
+      // Add event listeners for edit, delete, and reminder actions
+      if (arr[i] === "fa-pen") {
+        icon.addEventListener("click", () => editTask(newDiv));
+      } else if (arr[i] === "fa-trash") {
+        icon.addEventListener("click", () => delTask(newDiv));
+      } else if (arr[i] === "fa-bell") {
+        icon.addEventListener("click", () => setReminder(newDiv));
+      } else {
+        icon.addEventListener("click", () => checked(newDiv));
       }
-
-      // Append child div to the main div and add it to the task list
-      newDiv.append(childDiv);
-      list.append(newDiv);
     }
+
+    // Append child div to the main div and add it to the task list
+    newDiv.append(childDiv);
+    list.append(newDiv);
   } else {
     alert("Input must not be a number");
   }
@@ -115,17 +114,20 @@ function delTask(parentDiv) {
 }
 
 function showNotification(message) {
-  // Check if the Notification API is supported
-  if ('Notification' in window) {
-    // Request permission to show notifications
-    Notification.requestPermission().then(function (permission) {
-      if (permission === 'granted') {
-        // Create a notification
-        var notification = new Notification('To-Do List Reminder', {
-          body: message,
-        });
-      }
-    });
+  // Check if the browser supports the Notifications API
+  if ("Notification" in window) {
+    // Request permission if not granted
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          // If permission is granted, show the notification
+          new Notification("Task Reminder", { body: message });
+        }
+      });
+    } else {
+      // If permission is already granted, show the notification
+      new Notification("Task Reminder", { body: message });
+    }
   }
 }
 
@@ -156,17 +158,34 @@ function setReminder(parentDiv) {
 
     // Set a timeout for the reminder
     setTimeout(() => {
-      // Show a notification for the reminder
-      showNotification(`Time to do your task: "${msg}"`);
 
-      // Move the task back to the todo list and remove the cloned div
-      list.append(parentDiv);
-      parentDiv.style.display = "flex";
-      parentDivCopy.remove();
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      // Show or hide paragraph tag based on the content of the reminder list
-      let cont = document.querySelector("#rem-list");
-      showParaTag(cont);
+      if (isMobile) {
+        alert(`Time to do your task: "${msg}"`);
+        // Move the task back to the todo list and remove the cloned div
+        list.append(parentDiv);
+        parentDiv.style.display = "flex";
+        parentDivCopy.remove();
+
+        // Show or hide paragraph tag based on the content of the reminder list
+        let cont = document.querySelector("#rem-list");
+        showParaTag(cont);
+      }
+      else{
+        // Show a notification for the reminder
+        showNotification(`Time to do your task: "${msg}"`);
+        // alert(`Task Reminder: ${msg} `);
+
+        // Move the task back to the todo list and remove the cloned div
+        list.append(parentDiv);
+        parentDiv.style.display = "flex";
+        parentDivCopy.remove();
+
+        // Show or hide paragraph tag based on the content of the reminder list
+        let cont = document.querySelector("#rem-list");
+        showParaTag(cont);
+      }
     }, timeDiff);
 
     // Get the reminder list and remove the bell icon from the cloned div
@@ -182,7 +201,6 @@ function setReminder(parentDiv) {
   let cont = document.querySelector("#rem-list");
   showParaTag(cont);
 }
-
 
 // Function to move a completed task to the completed list
 function checked(parentDiv) {
@@ -204,7 +222,7 @@ function checked(parentDiv) {
   // Show or hide paragraph tag based on the content of the completed list
   const cont = document.querySelector("#comp-list");
   showParaTag(cont);
-  
+
   togglePDFButton();
 }
 
@@ -239,5 +257,4 @@ document.getElementById("download-pdf").addEventListener("click", () => {
     filename: "To-Do-List.pdf",
     margin: 10,
   });
-
 });
