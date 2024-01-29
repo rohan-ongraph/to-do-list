@@ -1,11 +1,16 @@
-// Selecting the input and task list elements
+// Selecting the input, task list, reminder list and completed list elements
 let input = document.querySelector("input");
 let list = document.querySelector("#todo-list");
+const remList = document.querySelector("#rem-list");
+const compList = document.querySelector("#comp-list");
 
 // Array of icon classes for various actions
 const arr = ["fa-check", "fa-pen", "fa-trash", "fa-bell"];
 
-// Event listener when the DOM is fully loaded
+// Global set to keep track of tasks set for reminders
+let tasksSetForReminders = new Set();
+
+// Event listener when the DOM is fully loaded----------------------------
 document.addEventListener("DOMContentLoaded", () => {
   // Set focus on the input element if it exists
   if (input) {
@@ -14,14 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
   togglePDFButton();
 });
 
-// Event listener for adding task when enter key is pressed while the focus is on input
+// Event listener for adding task when enter key is pressed while the focus is on input----------------------------------------------------
 input.addEventListener("keydown", (evt) => {
   if (evt.key == "Enter") {
     addTask();
   }
 });
 
-// Function to toggle the visibility of the PDF button
+// Function to toggle the visibility of the PDF button ----------------------------
 function togglePDFButton() {
   let pdfBtnContainer = document.querySelector(".pdf-button");
   let list = document.getElementById("todo-list");
@@ -33,14 +38,41 @@ function togglePDFButton() {
   }
 }
 
-// Function to add a new task to the list
+function findElementByText(parent, text) {
+  const elements = parent.querySelectorAll('li');
+  for (const element of elements) {
+    if (element.innerText.includes(text)) {
+      return element;
+    }
+  }
+  return null;
+}
+
+// FUNTION TO ADD A NEW TASK TO THE TO-DO LIST -------------------------------
 function addTask() {
   // Check if the input value is empty or contains only whitespace
   if (input.value === "" || input.value.trim() === "") {
     alert("You must write something");
+    return;
+  }
+
+  // Check if the task with the same content already exists
+  const existingTask = Array.from(list.children).find((task) => {
+    const liElement = task.querySelector("li");
+    return liElement && liElement.innerText.trim() === input.value.trim();
+  });
+
+  if (existingTask) {
+    alert("Task with the same content already exists");
+    return;
+  }
+
+  if (existingTask) {
+    alert("Task with the same content already exists");
+    return;
   }
   // Check if the input is not a number
-  else if (isNaN(input.value)) {
+  if (isNaN(input.value)) {
     // Create a new div to hold the task details
     let newDiv = document.createElement("div");
     newDiv.classList.add("list-div");
@@ -75,7 +107,8 @@ function addTask() {
     // Append child div to the main div and add it to the task list
     newDiv.append(childDiv);
     list.append(newDiv);
-  } else {
+  } 
+  else {
     alert("Input must not be a number");
   }
   // Show or hide paragraph tag based on the content of the task list
@@ -86,24 +119,41 @@ function addTask() {
   togglePDFButton();
 }
 
-// Function to edit a task
+// FUNCTION TO EDIT A TASK -------------------------------------
 function editTask(parentDiv) {
   // Prompt the user to enter the edited task
   const edited = prompt("Enter the edited task");
 
   // Update the task if input is not null and not empty after trimming
   if (edited !== null && edited.trim() !== "") {
+    let reminderTask = findElementByText(remList, parentDiv.querySelector("li").innerText);
+    
     parentDiv.querySelector("li").innerText = edited;
+
+    if(reminderTask){
+      reminderTask.innerText = edited;
+    }
+
   } else {
     alert("You must write something");
   }
 }
 
-// Function to delete a task
+// FUNTION TO DELETA A TASK ------------------------------------
 function delTask(parentDiv) {
+  const taskText = parentDiv.querySelector("li").innerText;
+
   // Remove the parent div, representing the task
   parentDiv.remove();
 
+  // Find the corresponding task in the reminder list
+  const reminderTask = findElementByText(remList, taskText);
+
+  // Remove the task from the reminder list if found
+  if (reminderTask) {
+    reminderTask.remove();
+    tasksSetForReminders.delete(taskText);
+  }
   // Show or hide paragraph tag based on the content of each task list
   let cont = document.querySelectorAll("ul");
   for (let i = 0; i < cont.length; i++) {
@@ -113,6 +163,7 @@ function delTask(parentDiv) {
   togglePDFButton();
 }
 
+// FUNTION TO SHOW NOTIFICATIONS------------------------------------
 function showNotification(message) {
   // Check if the browser supports the Notifications API
   if ("Notification" in window) {
@@ -131,11 +182,20 @@ function showNotification(message) {
   }
 }
 
-// Function to set a reminder for a task
-// Function to set a reminder for a task
+// FUNCTION TO SET A REMINDER FOR THE TASK -------------------------------
+// Create a set to store tasks set for reminders
 function setReminder(parentDiv) {
+  // Get the task message
+  const msg = parentDiv.querySelector("li").innerText;
+
+  // Check if the task has already been set for a reminder
+  if (tasksSetForReminders.has(msg)) {
+    alert("Reminder already set for this task.");
+    return;
+  }
+
   // Clone the parent div to preserve original state
-  const parentDivCopy = parentDiv.cloneNode(true);
+  const parentDivCopy = parentDiv.querySelector('li').cloneNode(true);
 
   // Prompt the user to enter the date and time for the reminder
   let timeVal = prompt(
@@ -147,62 +207,53 @@ function setReminder(parentDiv) {
     alert(
       "You must enter the Date and Time to set a reminder for the task 'format: (YYYY-MM-DD HH:mm:ss)'"
     );
-  } else {
-    // Calculate the time difference for the reminder
-    const time = new Date(timeVal).getTime();
-    const currTime = new Date().getTime();
-    const timeDiff = time - currTime;
-
-    // Get the task message
-    const msg = parentDiv.querySelector("li").innerText;
-
-    // Set a timeout for the reminder
-    setTimeout(() => {
-
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-      if (isMobile) {
-        alert(`Time to do your task: "${msg}"`);
-        // Move the task back to the todo list and remove the cloned div
-        list.append(parentDiv);
-        parentDiv.style.display = "flex";
-        parentDivCopy.remove();
-
-        // Show or hide paragraph tag based on the content of the reminder list
-        let cont = document.querySelector("#rem-list");
-        showParaTag(cont);
-      }
-      else{
-        // Show a notification for the reminder
-        showNotification(`Time to do your task: "${msg}"`);
-        // alert(`Task Reminder: ${msg} `);
-
-        // Move the task back to the todo list and remove the cloned div
-        list.append(parentDiv);
-        parentDiv.style.display = "flex";
-        parentDivCopy.remove();
-
-        // Show or hide paragraph tag based on the content of the reminder list
-        let cont = document.querySelector("#rem-list");
-        showParaTag(cont);
-      }
-    }, timeDiff);
-
-    // Get the reminder list and remove the bell icon from the cloned div
-    const remList = document.querySelector("#rem-list");
-    let iconToRemove = parentDivCopy.querySelector(".fa-bell");
-    iconToRemove.remove();
-    // Add the cloned div to the reminder list and hide the original div
-    remList.append(parentDivCopy);
-    parentDiv.style.display = "none";
+    return;
   }
 
+  // Calculate the time difference for the reminder
+  const time = new Date(timeVal).getTime();
+  const currTime = new Date().getTime();
+  const timeDiff = time - currTime;
+
+  // Set a timeout for the reminder
+  setTimeout(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      alert(`Time to do your task: "${msg}"`);
+
+      // Remove the copy as soon as notification is sent
+      parentDivCopy.remove();
+
+      // Show or hide paragraph tag based on the content of the reminder list
+      showParaTag(remList);
+    } else {
+      // Show a notification for the reminder
+      showNotification(`Time to do your task: "${msg}"`);
+
+      // Remove the copy as soon as notification is sent
+      parentDivCopy.remove();
+
+      // Show or hide paragraph tag based on the content of the reminder list
+      showParaTag(remList);
+    }
+
+    // Remove the task from the set after the reminder is triggered
+    tasksSetForReminders.delete(msg);
+  }, timeDiff);
+
+  // Add the cloned div to the reminder list and hide the original div
+  remList.append(parentDivCopy);
+
+  // Add the task to the set of tasks set for reminders
+  tasksSetForReminders.add(msg);
+
   // Show or hide paragraph tag based on the content of the reminder list
-  let cont = document.querySelector("#rem-list");
-  showParaTag(cont);
+  showParaTag(remList);
 }
 
-// Function to move a completed task to the completed list
+
+// FUNCTION TO MOVE A COMPLETED TASK TO THE COMPLETED LIST------------------------------------
 function checked(parentDiv) {
   // Array of icon classes to remove from the completed task
   const arr1 = ["fa-check", "fa-pen", "fa-bell"];
@@ -214,19 +265,24 @@ function checked(parentDiv) {
       iconToRemove.remove();
     }
   }
+  const taskText = parentDiv.querySelector("li").innerText;
 
   // Get the completed list and append the completed task
-  const compList = document.querySelector("#comp-list");
   compList.append(parentDiv);
 
+  const reminderTask = findElementByText(remList, taskText);
+  if (reminderTask) {
+    reminderTask.remove();
+    showParaTag(remList);
+    showParaTag(list);
+  }
   // Show or hide paragraph tag based on the content of the completed list
-  const cont = document.querySelector("#comp-list");
-  showParaTag(cont);
+  showParaTag(compList);
 
   togglePDFButton();
 }
 
-// Function to show or hide paragraph tag based on the content of a task list
+// FUNCTION TO SHOW OR HIDE PARAGRAPH TAG BASED ON THE CONTENT OF A TASK LIST----------------------------------
 function showParaTag(ul) {
   // Get the paragraph tag within the task list
   let p = ul.querySelector("p");
@@ -239,6 +295,7 @@ function showParaTag(ul) {
   }
 }
 
+// EVENT LISTENER FOR THE DOWNLOAD PDF BUTTON ---------------------------------
 document.getElementById("download-pdf").addEventListener("click", () => {
   // Clone the todo list element to exclude icons
   const clonedTodoList = document.getElementById("todo-list").cloneNode(true);
