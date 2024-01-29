@@ -182,6 +182,18 @@ function showNotification(message) {
   }
 }
 
+//FUNCTION TO VALIDATE THE ENTERED DATE AND TIME ---------------------------
+function isValidDateTime(dateTimeString) {
+  const regex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) (20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+  const inputDate = new Date(dateTimeString);
+
+  if (!regex.test(dateTimeString) || isNaN(inputDate) || inputDate < new Date()) {
+    alert("Invalid date and time or past date. Please use the format (YYYY-MM-DD HH:mm:ss) and ensure it's not in the past.");
+    return false;
+  }
+
+  return true;
+}
 // FUNCTION TO SET A REMINDER FOR THE TASK -------------------------------
 // Create a set to store tasks set for reminders
 function setReminder(parentDiv) {
@@ -209,6 +221,10 @@ function setReminder(parentDiv) {
     );
     return;
   }
+
+  if(!isValidDateTime(timeVal)){
+    return;
+  };
 
   // Calculate the time difference for the reminder
   const time = new Date(timeVal).getTime();
