@@ -157,6 +157,7 @@ body {
 .ul-container {
   display: flex;
   align-items: flex-start;
+  /* text-align: center; */
   height: 80%;
   width: 100%;
   justify-content: space-around;
@@ -226,6 +227,14 @@ body {
 #download-pdf:hover{
   background-color: black;
   color: white;
+}
+
+/* Styling for the reminder time in the reminder list */
+.reminder-time{
+  display: inline;
+  margin-left: 0.5rem;
+  font-weight: 300;
+  color: #999;
 }
 
 /* Footer Section ---------------------------------------- */
