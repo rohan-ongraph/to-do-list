@@ -7,8 +7,9 @@ const compList = document.querySelector("#comp-list");
 // Array of icon classes for various actions
 const arr = ["fa-check", "fa-pen", "fa-trash", "fa-bell"];
 
-// Global set to keep track of tasks set for reminders
+// Global set to keep track of tasks set for reminders and inputs
 let tasksSetForReminders = new Set();
+let taskSetForInput = new Set();
 
 // Event listener when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
@@ -79,6 +80,8 @@ function addTask() {
     li.innerHTML = input.value;
     newDiv.append(li);
 
+    taskSetForInput.add(input.value);
+
     // Create a child div to hold icons for various actions
     let childDiv = document.createElement("div");
     childDiv.classList.add("list-child-div");
@@ -109,6 +112,7 @@ function addTask() {
   }
 
   // Show or hide paragraph tag based on the content of the task list
+
   let cont = document.querySelector("#todo-list");
   showParaTag(cont);
   input.value = "";
@@ -125,8 +129,15 @@ function editTask(parentDiv) {
   if (edited !== null && edited.trim() !== "") {
     let reminderTask = findElementByText(remList, parentDiv.querySelector("li").innerText);
 
+    if (taskSetForInput.has(edited.trim())) {
+      alert("Task with the same content already exists. Please enter a different task.");
+      return;
+    }
+
     parentDiv.querySelector("li").innerText = edited;
 
+    // // Add the edited task to the set of unique tasks
+    taskSetForInput.add(edited.trim());
     if (reminderTask) {
       reminderTask.innerText = edited;
     }
